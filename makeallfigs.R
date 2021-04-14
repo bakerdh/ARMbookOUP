@@ -6,7 +6,7 @@ nsims <- 100  # global value for any stochastic simulations - increase to 100000
 # on my laptop, this takes around 3 minutes with 100 simulations, 6 minutes with 1000 simulations
 # 40 minutes with 10000 simulations and ~6 hours with 100000 simulations
 
-# in addition, the first time the Chapter 13 figures are created will take an extra 2-3 minutes
+# in addition, the first time the Chapter 13 figures are created will take an extra ~3 minutes
 # to do a large principle components analysis and save the results
 
 # compact code to install and activate all the packages required to generate the figures
