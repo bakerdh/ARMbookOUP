@@ -1,0 +1,1 @@
+Note: the BOSSr subdirectory contains images from the Bank of Standardised Stimuli (BOSS)The images were downloaded from: https://sites.google.com/site/bosstimuli/I have reduced the resolution of all images to 256x256 pixels and converted to greyscaleThey are available under a Creative Commons Attribution-Share Alike 3.0 license
