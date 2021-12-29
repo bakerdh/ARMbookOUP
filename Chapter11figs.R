@@ -216,31 +216,148 @@ figno <- figno + 1
 if(outputplot==1){postscript(paste('figures/Figure ',chapter,'.',figno,'.eps',sep=''), horizontal = FALSE, onefile = FALSE, paper = "special", height = 5, width = 5)}
 if(outputplot==2){pdf(paste('figures/Figure ',chapter,'.',figno,'.pdf',sep=''), bg="transparent", height = 5, width = 5)}
 
-kinase <- read.csv('data/kinases.csv')
-neutralindices <- which(kinase$Phenotype=='Neutral')
-resistorindices <- which(kinase$Phenotype=='Resistor')
-sensitizerindices <- which(kinase$Phenotype=='Sensitizer')
+load('data/zebrafish.RData')
+par(mfrow=c(1,2), las=1)
 
-plotlims <- c(-25,25,-25,25)
-ticklocsx <- seq(-25,25,25)    # locations of tick marks on x axis
-ticklocsy <- seq(-25,25,25)   # locations of tick marks on y axis
-ticklabelsx <- ticklocsx        # set labels for x ticks
-ticklabelsy <- ticklocsy    # set labels for y ticks
-
-par(pty="s")  # make axis square
-plot(x=NULL,y=NULL,axes=FALSE, ann=FALSE, xlim=plotlims[1:2], ylim=plotlims[3:4]) 
+plot(x=NULL,y=NULL,axes=FALSE,ann=FALSE, xlim=c(-29,30), ylim=c(0,1.5))
+ticklocsx <- seq(-30,30,10)
 axis(1, at=ticklocsx, tck=0.01, lab=F, lwd=2)     # plot tick marks (no labels)
-axis(2, at=ticklocsy, tck=0.01, lab=F, lwd=2)
-mtext(text = ticklabelsx, side = 1, at=ticklocsx)     # add the tick labels
-mtext(text = ticklabelsy, side = 2, at=ticklocsy, line=0.2, las=1)
-title(xlab="Normalized % apoptosis - 2 hours", col.lab=rgb(0,0,0), line=1.2, cex.lab=1.2)
-title(ylab="Normalized % apoptosis - 4 hours", col.lab=rgb(0,0,0), line=1.5, cex.lab=1.2)
+mtext(text = ticklocsx, side = 1, at=ticklocsx)     # add the tick labels
+title(xlab="Time (s)", col.lab=rgb(0,0,0), line=1.2, cex.lab=1.5)    
 
-points(kinase$Delta2h[neutralindices],kinase$Delta4h[neutralindices],pch=24,bg=pal2tone[1])
-points(kinase$Delta2h[resistorindices],kinase$Delta4h[resistorindices],pch=21,bg='black')
-points(kinase$Delta2h[sensitizerindices],kinase$Delta4h[sensitizerindices],pch=22,bg='white')
+ticklocsy <- seq(0,0.06,0.02)
+axis(2, at=0.75+10*ticklocsy, tck=0.01, lab=F, lwd=2)     # plot tick marks (no labels)
+mtext(text = ticklocsy, side = 2, at=0.75+10*ticklocsy, line=0.2)
 
-legend(-25,25, c("Neutral","Resistor","Sensitizer"), cex=1, pt.bg=c(pal2tone[1],"black","white"),  pch=c(24,21,22), box.lwd=2)
+ticklocsy <- seq(0,0.6,0.2)
+axis(2, at=ticklocsy, tck=0.01, lab=F, lwd=2)     # plot tick marks (no labels)
+mtext(text = ticklocsy, side = 2, at=ticklocsy, line=0.2)
+title(ylab="                    BDI", col.lab=rgb(0,0,0), line=1.7, cex.lab=1.5)    
+title(ylab="Count                        ", col.lab=rgb(0,0,0), line=1.7, cex.lab=1.5)
+
+mean6 <- colMeans(burdur6)
+mean9 <- colMeans(burdur9)
+CI6 <- 1.96*apply(burdur6,2,sd)/sqrt(192)
+CI9 <- 1.96*apply(burdur6,2,sd)/sqrt(192)
+
+polygon(times[c(1:60,60:1)],0.75+10*c(mean6+CI6,mean6[60:1]-CI6[60:1]),border=NA,col=rgb(0.9,0.9,0.9))
+polygon(times[c(1:60,60:1)],0.75+10*c(mean9+CI9,mean9[60:1]-CI9[60:1]),border=NA,col=rgb(0.9,0.9,1))
+lines(times,0.75+10*mean6,lwd=3)
+lines(times,0.75+10*mean9,lwd=3,col=pal2tone[1])
+
+mean6 <- colMeans(burct6)
+mean9 <- colMeans(burct9)
+CI6 <- 1.96*apply(burct6,2,sd)/sqrt(192)
+CI9 <- 1.96*apply(burct9,2,sd)/sqrt(192)
+
+polygon(times[c(1:60,60:1)],c(mean6+CI6,mean6[60:1]-CI6[60:1]),border=NA,col=rgb(0.9,0.9,0.9))
+polygon(times[c(1:60,60:1)],c(mean9+CI9,mean9[60:1]-CI9[60:1]),border=NA,col=rgb(0.9,0.9,1))
+lines(times,mean6,lwd=3)
+lines(times,mean9,lwd=3,col=pal2tone[1])
+lines(c(0,0),c(0,1.5),lty=2)
+
+legend(5,1.5,c('6 DPF','9 DPF'), col=c('black',pal2tone[1]),lwd=3,lty=1, box.lwd=2)
+text(-27.5,1.5,'(a)',cex=1.5)
+
+
+plot(x=NULL,y=NULL,axes=FALSE,ann=FALSE, xlim=c(-0.02,0.12), ylim=c(-0.2,1.2))
+text(-0.01,1.2,'(b)',cex=1.5)
+
+ticklocsx <- c(0,0.1)
+axis(1, at=ticklocsx, tck=0.01, lab=F, lwd=2)     # plot tick marks (no labels)
+mtext(text = ticklocsx, side = 1, at=ticklocsx)     # add the tick labels
+title(xlab="BDI", col.lab=rgb(0,0,0), line=1.2, cex.lab=1.5)    
+
+ticklocsy <- c(0,1)
+axis(2, at=ticklocsy, tck=0.01, lab=F, lwd=2)     # plot tick marks (no labels)
+mtext(text = ticklocsy, side = 2, at=ticklocsy, line=0.2)
+title(ylab="Activity count", col.lab=rgb(0,0,0), line=1.2, cex.lab=1.5)    
+
+points(mean(burdur6[,30]),mean(burct6[,30]),pch=15)
+points(mean(burdur9[,30]),mean(burct9[,30]),pch=15,col=pal2tone[1])
+points(mean(burdur6[,31]),mean(burct6[,31]),pch=16)
+points(mean(burdur9[,31]),mean(burct9[,31]),pch=16,col=pal2tone[1])
+
+
+bothdata6 <- matrix(0,nrow=192,ncol=2)
+bothdata9 <- bothdata6
+bothdata6[,1] <- burdur6[,30]
+bothdata6[,2] <- burct6[,30]
+bothdata9[,1] <- burdur9[,30]
+bothdata9[,2] <- burct9[,30]
+output1 <- tsqh.test(bothdata6,bothdata9,paired=FALSE)
+
+A <- cov(bothdata6)
+ctr    <- colMeans(bothdata6) 
+RR     <- chol(A)                               # Cholesky decomposition
+angles <- seq(0, 2*pi, length.out=200)          # angles for ellipse
+ell    <- 1 * cbind(cos(angles), sin(angles)) %*% RR  # ellipse scaled with factor 1
+ellCtr <- sweep(ell, 2, ctr, "+")               # center ellipse to the data centroid
+eigVal  <- eigen(A)$values
+eigVec  <- eigen(A)$vectors
+eigScl  <- eigVec  %*% diag(sqrt(eigVal))  # scale eigenvectors to length = square-root
+xMat    <- rbind(ctr[1] + eigScl[1, ], ctr[1] - eigScl[1, ])
+yMat    <- rbind(ctr[2] + eigScl[2, ], ctr[2] - eigScl[2, ])
+ellBase <- cbind(sqrt(eigVal[1])*cos(angles), sqrt(eigVal[2])*sin(angles)) 
+ellRot  <- eigVec %*% t(ellBase) 
+lines((ellRot+ctr)[1, ], (ellRot+ctr)[2, ], lwd=2, col='lightgrey')
+
+A <- cov(bothdata9)
+ctr    <- colMeans(bothdata9) 
+RR     <- chol(A)                               # Cholesky decomposition
+angles <- seq(0, 2*pi, length.out=200)          # angles for ellipse
+ell    <- 1 * cbind(cos(angles), sin(angles)) %*% RR  # ellipse scaled with factor 1
+ellCtr <- sweep(ell, 2, ctr, "+")               # center ellipse to the data centroid
+eigVal  <- eigen(A)$values
+eigVec  <- eigen(A)$vectors
+eigScl  <- eigVec  %*% diag(sqrt(eigVal))  # scale eigenvectors to length = square-root
+xMat    <- rbind(ctr[1] + eigScl[1, ], ctr[1] - eigScl[1, ])
+yMat    <- rbind(ctr[2] + eigScl[2, ], ctr[2] - eigScl[2, ])
+ellBase <- cbind(sqrt(eigVal[1])*cos(angles), sqrt(eigVal[2])*sin(angles)) 
+ellRot  <- eigVec %*% t(ellBase) 
+lines((ellRot+ctr)[1, ], (ellRot+ctr)[2, ], lwd=2, col=pal2tone[3])
+
+
+bothdata6 <- matrix(0,nrow=192,ncol=2)
+bothdata9 <- bothdata6
+bothdata6[,1] <- burdur6[,31]
+bothdata6[,2] <- burct6[,31]
+bothdata9[,1] <- burdur9[,31]
+bothdata9[,2] <- burct9[,31]
+output2 <- tsqh.test(bothdata6,bothdata9,paired=FALSE)
+
+
+A <- cov(bothdata6)
+ctr    <- colMeans(bothdata6) 
+RR     <- chol(A)                               # Cholesky decomposition
+angles <- seq(0, 2*pi, length.out=200)          # angles for ellipse
+ell    <- 1 * cbind(cos(angles), sin(angles)) %*% RR  # ellipse scaled with factor 1
+ellCtr <- sweep(ell, 2, ctr, "+")               # center ellipse to the data centroid
+eigVal  <- eigen(A)$values
+eigVec  <- eigen(A)$vectors
+eigScl  <- eigVec  %*% diag(sqrt(eigVal))  # scale eigenvectors to length = square-root
+xMat    <- rbind(ctr[1] + eigScl[1, ], ctr[1] - eigScl[1, ])
+yMat    <- rbind(ctr[2] + eigScl[2, ], ctr[2] - eigScl[2, ])
+ellBase <- cbind(sqrt(eigVal[1])*cos(angles), sqrt(eigVal[2])*sin(angles)) 
+ellRot  <- eigVec %*% t(ellBase) 
+lines((ellRot+ctr)[1, ], (ellRot+ctr)[2, ], lwd=2, col='lightgrey')
+
+A <- cov(bothdata9)
+ctr    <- colMeans(bothdata9) 
+RR     <- chol(A)                               # Cholesky decomposition
+angles <- seq(0, 2*pi, length.out=200)          # angles for ellipse
+ell    <- 1 * cbind(cos(angles), sin(angles)) %*% RR  # ellipse scaled with factor 1
+ellCtr <- sweep(ell, 2, ctr, "+")               # center ellipse to the data centroid
+eigVal  <- eigen(A)$values
+eigVec  <- eigen(A)$vectors
+eigScl  <- eigVec  %*% diag(sqrt(eigVal))  # scale eigenvectors to length = square-root
+xMat    <- rbind(ctr[1] + eigScl[1, ], ctr[1] - eigScl[1, ])
+yMat    <- rbind(ctr[2] + eigScl[2, ], ctr[2] - eigScl[2, ])
+ellBase <- cbind(sqrt(eigVal[1])*cos(angles), sqrt(eigVal[2])*sin(angles)) 
+ellRot  <- eigVec %*% t(ellBase) 
+lines((ellRot+ctr)[1, ], (ellRot+ctr)[2, ], lwd=2, col=pal2tone[3])
+
+legend(0.045,0.2,c('Dark','Light'), pch=15:16, box.lwd=2)
 
 if(outputplot>0){dev.off()}  # this line goes after you've finished plotting (to output the example below, move it to the bottom of the script)
 
