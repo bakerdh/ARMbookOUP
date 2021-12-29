@@ -1,250 +1,364 @@
 
-# Chapter 9 figures ---------------------------------------------------------------
+# Chapter 11 figures ---------------------------------------------------------------
 
-chapter <- 9
+chapter <- 11
 figno <- 1
 
-if(outputplot==1){postscript(paste('figures/Figure ',chapter,'.',figno,'.eps',sep=''), horizontal = FALSE, onefile = FALSE, paper = "special", height = 4.5, width = 6.5)}
-if(outputplot==2){pdf(paste('figures/Figure ',chapter,'.',figno,'.pdf',sep=''), bg="transparent", height = 4.5, width = 6.5)}
+if(outputplot==1){postscript(paste('figures/Figure ',chapter,'.',figno,'.eps',sep=''), horizontal = FALSE, onefile = FALSE, paper = "special", height = 8, width = 7.5)}
+if(outputplot==2){pdf(paste('figures/Figure ',chapter,'.',figno,'.pdf',sep=''), bg="transparent", height = 8, width = 7.5)}
 
-xvals <<- seq(6,24,3)
-yvals <<- c(65,66,69,71,76,80,87)
-plot(xvals,yvals,type='p',pch=16,xlab='Age (months)',ylab='Height (cm)',xlim=c(6,24),ylim=c(60,90))
-lmfit <- lm(yvals ~ xvals)
-lines(xvals,lmfit$coefficients[1] + xvals*lmfit$coefficients[2],lwd=3,col=pal2tone[1])
+npoints <- 1000
+par(mfrow=c(2,2), las=1)
 
-for (n in 1:length(xvals)){lines(xvals[c(n,n)],c(yvals[n],lmfit$coefficients[1] + xvals[n]*lmfit$coefficients[2]))}
-
-if(outputplot>0){dev.off()}  # this line goes after you've finished plotting (to output the example below, move it to the bottom of the script)
-
-
-figno <- figno + 1
-if(outputplot==1){postscript(paste('figures/Figure ',chapter,'.',figno,'.eps',sep=''), horizontal = FALSE, onefile = FALSE, paper = "special", height = 4.5, width = 6.5)}
-if(outputplot==2){pdf(paste('figures/Figure ',chapter,'.',figno,'.pdf',sep=''), bg="transparent", height = 4.5, width = 6.5)}
-
-xvals2 <- xvals^2
-
-plot(xvals,yvals,type='p',xlab='Age (months)',ylab='Height (cm)',pch=16,xlim=c(6,24),ylim=c(60,90))
-lmfit2 <- lm(yvals ~ xvals2)
-lines(xvals,lmfit2$coefficients[1] + xvals2*lmfit2$coefficients[2],lwd=3,col=pal2tone[1])
-
-for (n in 1:length(xvals)){lines(xvals[c(n,n)],c(yvals[n],lmfit2$coefficients[1] + xvals2[n]*lmfit2$coefficients[2]))}
-
-if(outputplot>0){dev.off()}  # this line goes after you've finished plotting (to output the example below, move it to the bottom of the script)
+plot(x=NULL,y=NULL,axes=FALSE,ann=FALSE, xlim=c(-1,1), ylim=c(-1,1))
+simdatax <- rnorm(npoints,mean=0,sd=0.2)
+simdatay <- rnorm(npoints,mean=0,sd=0.2)
+points(simdatax,simdatay,pch=16,cex=0.6,col=pal2tone[3])
+lines(c(-1,1),c(0,0),lty=2)
+lines(c(0,0),c(-1,1),lty=2)
+text(-0.95,0.1,'x',cex=1.5)
+text(0,0.95,'y',pos=4,cex=1.5)
+text(-0.95,0.95,'(a)',cex=1.5)
 
 
-figno <- figno + 1
-if(outputplot==1){postscript(paste('figures/Figure ',chapter,'.',figno,'.eps',sep=''), horizontal = FALSE, onefile = FALSE, paper = "special", height = 4.5, width = 6.5)}
-if(outputplot==2){pdf(paste('figures/Figure ',chapter,'.',figno,'.pdf',sep=''), bg="transparent", height = 4.5, width = 6.5)}
+plot(x=NULL,y=NULL,axes=FALSE,ann=FALSE, xlim=c(-1,1), ylim=c(-1,1))
+simdatax <- rnorm(npoints,mean=0.5,sd=0.2)
+simdatay <- rnorm(npoints,mean=0,sd=0.2)
+points(simdatax,simdatay,pch=16,cex=0.6,col=pal2tone[3])
+lines(c(-1,1),c(0,0),lty=2)
+lines(c(0,0),c(-1,1),lty=2)
+text(-0.95,0.1,'x',cex=1.5)
+text(0,0.95,'y',pos=4,cex=1.5)
+text(-0.95,0.95,'(b)',cex=1.5)
 
-coronaUK <- read.csv('data/UKcorona.csv',header=FALSE)
 
-fitexp <- function(p){
-  pred <- p[1]*timeindays^p[2] + p[3]
-  errorout <- sqrt(mean((pred-ncases)^2))
-  return(errorout)
-}
+plot(x=NULL,y=NULL,axes=FALSE,ann=FALSE, xlim=c(-1,1), ylim=c(-1,1))
+simdatax <- rnorm(npoints,mean=0,sd=0.2)
+simdatay <- rnorm(npoints,mean=0.5,sd=0.2)
+points(simdatax,simdatay,pch=16,cex=0.6,col=pal2tone[3])
+lines(c(-1,1),c(0,0),lty=2)
+lines(c(0,0),c(-1,1),lty=2)
+text(-0.95,0.1,'x',cex=1.5)
+text(0,0.95,'y',pos=4,cex=1.5)
+text(-0.95,0.95,'(c)',cex=1.5)
 
-startvals <- c(1,2,40)
-opt <- optimset(MaxIter=100000,MaxFunEvals=100000)
 
-timeindays <<- 1:30
-ncases <<- coronaUK[40:69,2]
-startvals <- c(1,2,40)
-sout <- neldermead::fminsearch(fitexp, startvals, opt)
-p1 <- sout$optbase$xopt
-
-timeindays <<- 1:44
-ncases <<- coronaUK[40:83,2]
-sout <- neldermead::fminsearch(fitexp, startvals, opt)
-p2 <- sout$optbase$xopt
-
-timeindays <- 1:50  
-pred1 <- p1[1]*timeindays^p1[2] + p1[3]   
-pred2 <- p2[1]*timeindays^p2[2] + p2[3]   
-
-plot(x=NULL,y=NULL,xlim=c(0,50),ylim=c(0,120),xlab='Days from 1st March 2020',ylab='Thousands of cases')
-lines(0:49,pred1/1000,lty=2,lwd=3)
-lines(0:49,pred2/1000,col=pal2tone[1],lwd=3)
-points(0:43,coronaUK[40:83,2]/1000,pch=16)
-arrows(30,20,y1=0,length=0.1,angle=45,lwd=3)
-legend(0,120,c('Fit first 30 days','Fit all data'),col=c('black',pal2tone[1]),lty=c(2,1),lwd=3)
+plot(x=NULL,y=NULL,axes=FALSE,ann=FALSE, xlim=c(-1,1), ylim=c(-1,1))
+simdatax <- rnorm(npoints,mean=0.5,sd=0.2)
+simdatay <- rnorm(npoints,mean=0.5,sd=0.2)
+points(simdatax,simdatay,pch=16,cex=0.6,col=pal2tone[3])
+lines(c(-1,1),c(0,0),lty=2)
+lines(c(0,0),c(-1,1),lty=2)
+text(-0.95,0.1,'x',cex=1.5)
+text(0,0.95,'y',pos=4,cex=1.5)
+text(-0.95,0.95,'(d)',cex=1.5)
 
 if(outputplot>0){dev.off()}  # this line goes after you've finished plotting (to output the example below, move it to the bottom of the script)
 
 
 figno <- figno + 1
-if(outputplot==1){postscript(paste('figures/Figure ',chapter,'.',figno,'.eps',sep=''), horizontal = FALSE, onefile = FALSE, paper = "special", height = 4.5, width = 6.5)}
-if(outputplot==2){pdf(paste('figures/Figure ',chapter,'.',figno,'.pdf',sep=''), bg="transparent", height = 4.5, width = 6.5)}
+if(outputplot==1){postscript(paste('figures/Figure ',chapter,'.',figno,'.eps',sep=''), horizontal = FALSE, onefile = FALSE, paper = "special", height = 8, width = 7.5)}
+if(outputplot==2){pdf(paste('figures/Figure ',chapter,'.',figno,'.pdf',sep=''), bg="transparent", height = 8, width = 7.5)}
 
-ramp <- colorRamp(c(pal2tone[3],"white","white"))
-colmatrix2 <- rgb(ramp(seq(0, 1, length = 100)), max = 255)
+npoints <- 1000
+par(mfrow=c(2,2), las=1)
 
-mvect <- seq(-2,2,0.1)
-cvect <- seq(0,100,2)
-allerrors <- matrix(0,nrow=length(mvect),ncol=length(cvect))
-for (mindex in 1:length(mvect)){
-  for (cindex in 1:length(cvect)){
-    pred <- mvect[mindex]*xvals + cvect[cindex]
-    allerrors[mindex,cindex] <- sqrt(mean((pred-yvals)^2))
-  }
-}
+plot(x=NULL,y=NULL,axes=FALSE,ann=FALSE, xlim=c(-1,1), ylim=c(-1,1))
+simdatax <- rnorm(npoints,mean=0,sd=0.2)
+simdatay <- rnorm(npoints,mean=0,sd=0.1) + simdatax
+points(simdatax,simdatay,pch=16,cex=0.6,col=pal2tone[3])
+lines(c(-1,1),c(0,0),lty=2)
+lines(c(0,0),c(-1,1),lty=2)
+text(-0.95,0.1,'x',cex=1.5)
+text(0,0.95,'y',pos=4,cex=1.5)
+text(-0.95,0.95,'(a)',cex=1.5)
 
-plotlims <- c(-2,2,0,100)
-ticklocsx <- seq(-2,2,1)    # locations of tick marks on x axis
-ticklocsy <- seq(0,100,20)   # locations of tick marks on y axis
-ticklabelsx <- ticklocsx       # set labels for x ticks
-ticklabelsy <- ticklocsy    # set labels for y ticks
 
-plot(x=NULL,y=NULL,axes=FALSE, ann=FALSE, xlim=plotlims[1:2], ylim=plotlims[3:4])  
+plot(x=NULL,y=NULL,axes=FALSE,ann=FALSE, xlim=c(-1,1), ylim=c(-1,1))
+simdatax <- rnorm(npoints,mean=0,sd=0.2)
+simdatay <- rnorm(npoints,mean=0,sd=0.1) + simdatax
+points(simdatax+0.5,simdatay,pch=16,cex=0.6,col=pal2tone[3])
+lines(c(-1,1),c(0,0),lty=2)
+lines(c(0,0),c(-1,1),lty=2)
+text(-0.95,0.1,'x',cex=1.5)
+text(0,0.95,'y',pos=4,cex=1.5)
+text(-0.95,0.95,'(b)',cex=1.5)
+
+
+plot(x=NULL,y=NULL,axes=FALSE,ann=FALSE, xlim=c(-1,1), ylim=c(-1,1))
+simdatax <- rnorm(npoints,mean=0,sd=0.2)
+simdatay <- rnorm(npoints,mean=0,sd=0.1) + simdatax
+points(simdatax,simdatay+0.5,pch=16,cex=0.6,col=pal2tone[3])
+lines(c(-1,1),c(0,0),lty=2)
+lines(c(0,0),c(-1,1),lty=2)
+text(-0.95,0.1,'x',cex=1.5)
+text(0,0.95,'y',pos=4,cex=1.5)
+text(-0.95,0.95,'(c)',cex=1.5)
+
+
+plot(x=NULL,y=NULL,axes=FALSE,ann=FALSE, xlim=c(-1,1), ylim=c(-1,1))
+simdatax <- rnorm(npoints,mean=0,sd=0.2)
+simdatay <- rnorm(npoints,mean=0,sd=0.1) + simdatax
+points(simdatax+0.5,simdatay+0.5,pch=16,cex=0.6,col=pal2tone[3])
+lines(c(-1,1),c(0,0),lty=2)
+lines(c(0,0),c(-1,1),lty=2)
+text(-0.95,0.1,'x',cex=1.5)
+text(0,0.95,'y',pos=4,cex=1.5)
+text(-0.95,0.95,'(d)',cex=1.5)
+
+if(outputplot>0){dev.off()}  # this line goes after you've finished plotting (to output the example below, move it to the bottom of the script)
+
+
+figno <- figno + 1
+if(outputplot==1){postscript(paste('figures/Figure ',chapter,'.',figno,'.eps',sep=''), horizontal = FALSE, onefile = FALSE, paper = "special", height = 4, width = 4)}
+if(outputplot==2){pdf(paste('figures/Figure ',chapter,'.',figno,'.pdf',sep=''), bg="transparent", height = 4, width = 4)}
+
+npoints <- 100
+par(mar=c(0.1,0.1,0.1,0.1))
+# par(pty="s")  # make axis square
+plot(x=NULL,y=NULL,axes=FALSE,ann=FALSE, xlim=c(-1,1), ylim=c(-1,1))
+simdatax <- rnorm(npoints,mean=0.5,sd=0.2)
+simdatay <- rnorm(npoints,mean=0.5,sd=0.2)
+for (n in 1:npoints){lines(c(mean(simdatax),simdatax[n]),c(mean(simdatay),simdatay[n]),col=rgb(0.8,0.8,0.8))}
+points(simdatax,simdatay,pch=16,cex=0.6,col=pal2tone[1])
+lines(c(0,mean(simdatax)),c(0,mean(simdatay)),lwd=3,col='black')
+points(mean(simdatax),mean(simdatay),pch=21,cex=1.2,bg='black')
+lines(c(-1,1),c(0,0),lty=2)
+lines(c(0,0),c(-1,1),lty=2)
+text(-0.95,0.1,'x',cex=1.5)
+text(0,0.95,'y',pos=4,cex=1.5)
+
+if(outputplot>0){dev.off()}  # this line goes after you've finished plotting (to output the example below, move it to the bottom of the script)
+
+
+
+figno <- figno + 1
+if(outputplot==1){postscript(paste('figures/Figure ',chapter,'.',figno,'.eps',sep=''), horizontal = FALSE, onefile = FALSE, paper = "special", height = 5, width = 9)}
+if(outputplot==2){pdf(paste('figures/Figure ',chapter,'.',figno,'.pdf',sep=''), bg="transparent", height = 5, width = 9)}
+
+load('data/SSVEPdata.RData')
+
+par(mfrow=c(1,2), las=1)
+
+gm <- colMeans(baseline)
+
+par(pty="s")  # make axis square
+plot(x=NULL,y=NULL,axes=FALSE,ann=FALSE, xlim=c(-0.33,0.33), ylim=c(-0.33,0.33))
+lines(c(-0.3,0.3),c(0,0),lty=2)
+lines(c(0,0),c(-0.3,0.3),lty=2)
+points(baseline[,1],baseline[,2],pch=16,cex=0.6,col=pal2tone[1])
+
+A <- cov(baseline)
+ctr    <- colMeans(baseline) 
+RR     <- chol(A)                               # Cholesky decomposition
+angles <- seq(0, 2*pi, length.out=200)          # angles for ellipse
+ell    <- 1 * cbind(cos(angles), sin(angles)) %*% RR  # ellipse scaled with factor 1
+ellCtr <- sweep(ell, 2, ctr, "+")               # center ellipse to the data centroid
+eigVal  <- eigen(A)$values
+eigVec  <- eigen(A)$vectors
+eigScl  <- eigVec  %*% diag(sqrt(eigVal))  # scale eigenvectors to length = square-root
+xMat    <- rbind(ctr[1] + eigScl[1, ], ctr[1] - eigScl[1, ])
+yMat    <- rbind(ctr[2] + eigScl[2, ], ctr[2] - eigScl[2, ])
+ellBase <- cbind(sqrt(eigVal[1])*cos(angles), sqrt(eigVal[2])*sin(angles)) 
+ellRot  <- eigVec %*% t(ellBase) 
+matlines(xMat, yMat, lty=1, lwd=3, col="grey")
+lines((ellRot+ctr)[1, ], (ellRot+ctr)[2, ], lwd=2)
+
+lines(c(0,gm[1]),c(0,gm[2]),lwd=3,col='black')
+points(gm[1],gm[2],pch=21,cex=1.2,bg='black')
+
+text(0.3,0.05,'0.3',cex=1.2)
+text(0,0.3,'0.3',pos=4,cex=1.2)
+text(-0.28,0.05,'Re',cex=1.2)
+text(0,-0.28,'Im',pos=4,cex=1.2)
+text(-0.3,0.3,'(a)',pos=4,cex=1.2)
+title(main='Baseline')
+
+gm <- colMeans(data)
+
+par(pty="s")  # make axis square
+plot(x=NULL,y=NULL,axes=FALSE,ann=FALSE, xlim=c(-1.1,1.1), ylim=c(-1.1,1.1))
+lines(c(-1,1),c(0,0),lty=2)
+lines(c(0,0),c(-1,1),lty=2)
+points(data[,1],data[,2],pch=16,cex=0.6,col=pal2tone[1])
+
+A <- cov(data)
+ctr    <- colMeans(data) 
+RR     <- chol(A)                               # Cholesky decomposition
+angles <- seq(0, 2*pi, length.out=200)          # angles for ellipse
+ell    <- 1 * cbind(cos(angles), sin(angles)) %*% RR  # ellipse scaled with factor 1
+ellCtr <- sweep(ell, 2, ctr, "+")               # center ellipse to the data centroid
+eigVal  <- eigen(A)$values
+eigVec  <- eigen(A)$vectors
+eigScl  <- eigVec  %*% diag(sqrt(eigVal))  # scale eigenvectors to length = square-root
+xMat    <- rbind(ctr[1] + eigScl[1, ], ctr[1] - eigScl[1, ])
+yMat    <- rbind(ctr[2] + eigScl[2, ], ctr[2] - eigScl[2, ])
+ellBase <- cbind(sqrt(eigVal[1])*cos(angles), sqrt(eigVal[2])*sin(angles)) 
+ellRot  <- eigVec %*% t(ellBase) 
+matlines(xMat, yMat, lty=1, lwd=3, col="grey")
+lines((ellRot+ctr)[1, ], (ellRot+ctr)[2, ], lwd=2)
+
+lines(c(0,gm[1]),c(0,gm[2]),lwd=3,col='black')
+points(gm[1],gm[2],pch=21,cex=1.2,bg='black')
+
+text(1,0.15,'1',cex=1.2)
+text(0,1,'1',pos=4,cex=1.2)
+text(-0.95,0.15,'Re',cex=1.2)
+text(0,-0.95,'Im',pos=4,cex=1.2)
+text(-1,1,'(b)',pos=4,cex=1.2)
+title(main='32% target')
+
+if(outputplot>0){dev.off()}  # this line goes after you've finished plotting (to output the example below, move it to the bottom of the script)
+
+
+
+figno <- figno + 1
+if(outputplot==1){postscript(paste('figures/Figure ',chapter,'.',figno,'.eps',sep=''), horizontal = FALSE, onefile = FALSE, paper = "special", height = 5, width = 5)}
+if(outputplot==2){pdf(paste('figures/Figure ',chapter,'.',figno,'.pdf',sep=''), bg="transparent", height = 5, width = 5)}
+
+load('data/zebrafish.RData')
+par(mfrow=c(1,2), las=1)
+
+plot(x=NULL,y=NULL,axes=FALSE,ann=FALSE, xlim=c(-29,30), ylim=c(0,1.5))
+ticklocsx <- seq(-30,30,10)
 axis(1, at=ticklocsx, tck=0.01, lab=F, lwd=2)     # plot tick marks (no labels)
-axis(2, at=ticklocsy, tck=0.01, lab=F, lwd=2)
-mtext(text = ticklabelsx, side = 1, at=ticklocsx)     # add the tick labels
-mtext(text = ticklabelsy, side = 2, at=ticklocsy, line=0.2, las=1)
-title(xlab=expression(Slope~(beta[1])), col.lab=rgb(0,0,0), line=1.2, cex.lab=1.5) 
-title(ylab=expression(Intercept~(beta[0])), col.lab=rgb(0,0,0), line=1.5, cex.lab=1.5)
+mtext(text = ticklocsx, side = 1, at=ticklocsx)     # add the tick labels
+title(xlab="Time (s)", col.lab=rgb(0,0,0), line=1.2, cex.lab=1.5)    
 
-image(mvect,cvect,allerrors,col=colmatrix2, add=TRUE, useRaster=TRUE, axes=FALSE, ann=FALSE)
-contour(x=mvect,y=cvect,allerrors,add=TRUE)
+ticklocsy <- seq(0,0.06,0.02)
+axis(2, at=0.75+10*ticklocsy, tck=0.01, lab=F, lwd=2)     # plot tick marks (no labels)
+mtext(text = ticklocsy, side = 2, at=0.75+10*ticklocsy, line=0.2)
 
-pentx <- cos(pi/2+(0:5)*2*pi/5)/8
-penty <- sin(pi/2+(0:5)*2*pi/5)*6
-polygon(lmfit$coefficients[2]+pentx[c(1,3,5,2,4,6)],lmfit$coefficients[1]+penty[c(1,3,5,2,4,6)],col='black')
+ticklocsy <- seq(0,0.6,0.2)
+axis(2, at=ticklocsy, tck=0.01, lab=F, lwd=2)     # plot tick marks (no labels)
+mtext(text = ticklocsy, side = 2, at=ticklocsy, line=0.2)
+title(ylab="                    BDI", col.lab=rgb(0,0,0), line=1.7, cex.lab=1.5)    
+title(ylab="Count                        ", col.lab=rgb(0,0,0), line=1.7, cex.lab=1.5)
 
-if(outputplot>0){dev.off()}  # this line goes after you've finished plotting (to output the example below, move it to the bottom of the script)
+mean6 <- colMeans(burdur6)
+mean9 <- colMeans(burdur9)
+CI6 <- 1.96*apply(burdur6,2,sd)/sqrt(192)
+CI9 <- 1.96*apply(burdur6,2,sd)/sqrt(192)
+
+polygon(times[c(1:60,60:1)],0.75+10*c(mean6+CI6,mean6[60:1]-CI6[60:1]),border=NA,col=rgb(0.9,0.9,0.9))
+polygon(times[c(1:60,60:1)],0.75+10*c(mean9+CI9,mean9[60:1]-CI9[60:1]),border=NA,col=rgb(0.9,0.9,1))
+lines(times,0.75+10*mean6,lwd=3)
+lines(times,0.75+10*mean9,lwd=3,col=pal2tone[1])
+
+mean6 <- colMeans(burct6)
+mean9 <- colMeans(burct9)
+CI6 <- 1.96*apply(burct6,2,sd)/sqrt(192)
+CI9 <- 1.96*apply(burct9,2,sd)/sqrt(192)
+
+polygon(times[c(1:60,60:1)],c(mean6+CI6,mean6[60:1]-CI6[60:1]),border=NA,col=rgb(0.9,0.9,0.9))
+polygon(times[c(1:60,60:1)],c(mean9+CI9,mean9[60:1]-CI9[60:1]),border=NA,col=rgb(0.9,0.9,1))
+lines(times,mean6,lwd=3)
+lines(times,mean9,lwd=3,col=pal2tone[1])
+lines(c(0,0),c(0,1.5),lty=2)
+
+legend(5,1.5,c('6 DPF','9 DPF'), col=c('black',pal2tone[1]),lwd=3,lty=1, box.lwd=2)
+text(-27.5,1.5,'(a)',cex=1.5)
 
 
+plot(x=NULL,y=NULL,axes=FALSE,ann=FALSE, xlim=c(-0.02,0.12), ylim=c(-0.2,1.2))
+text(-0.01,1.2,'(b)',cex=1.5)
 
-figno <- figno + 1
-if(outputplot==1){postscript(paste('figures/Figure ',chapter,'.',figno,'.eps',sep=''), horizontal = FALSE, onefile = FALSE, paper = "special", height = 4.5, width = 6.5)}
-if(outputplot==2){pdf(paste('figures/Figure ',chapter,'.',figno,'.pdf',sep=''), bg="transparent", height = 4.5, width = 6.5)}
-
-fitline <- function(p){
-  pred <- p[1]*xvals + p[2]
-  errorout <- sqrt(mean((pred-yvals)^2))
-  return(errorout)
-}
-
-mvect <- seq(-2,2,0.1)
-cvect <- seq(0,100,2)
-allerrors <- matrix(0,nrow=length(mvect),ncol=length(cvect))
-for (mindex in 1:length(mvect)){
-  for (cindex in 1:length(cvect)){
-    pred <- mvect[mindex]*xvals + cvect[cindex]
-    allerrors[mindex,cindex] <- sqrt(mean((pred-yvals)^2))
-  }
-}
-
-startvals <- c(-1.5,50)
-opt <- optimset(MaxIter=1)
-sout <- neldermead::fminsearch(fitline, startvals, opt)
-
-xyvals0 <- sout$simplex0$x
-
-plotlims <- c(-2,2,0,100)
-ticklocsx <- seq(-2,2,1)    # locations of tick marks on x axis
-ticklocsy <- seq(0,100,20)   # locations of tick marks on y axis
-ticklabelsx <- ticklocsx       # set labels for x ticks
-ticklabelsy <- ticklocsy    # set labels for y ticks
-
-plot(x=NULL,y=NULL,axes=FALSE, ann=FALSE, xlim=plotlims[1:2], ylim=plotlims[3:4])  
+ticklocsx <- c(0,0.1)
 axis(1, at=ticklocsx, tck=0.01, lab=F, lwd=2)     # plot tick marks (no labels)
-axis(2, at=ticklocsy, tck=0.01, lab=F, lwd=2)
-mtext(text = ticklabelsx, side = 1, at=ticklocsx)     # add the tick labels
-mtext(text = ticklabelsy, side = 2, at=ticklocsy, line=0.2, las=1)
-title(xlab=expression(Slope~(beta[1])), col.lab=rgb(0,0,0), line=1.2, cex.lab=1.5) 
-title(ylab=expression(Intercept~(beta[0])), col.lab=rgb(0,0,0), line=1.5, cex.lab=1.5)
+mtext(text = ticklocsx, side = 1, at=ticklocsx)     # add the tick labels
+title(xlab="BDI", col.lab=rgb(0,0,0), line=1.2, cex.lab=1.5)    
 
-image(mvect,cvect,allerrors,col=colmatrix2, add=TRUE, useRaster=TRUE, axes=FALSE, ann=FALSE)
-contour(x=mvect,y=cvect,allerrors,add=TRUE)
+ticklocsy <- c(0,1)
+axis(2, at=ticklocsy, tck=0.01, lab=F, lwd=2)     # plot tick marks (no labels)
+mtext(text = ticklocsy, side = 2, at=ticklocsy, line=0.2)
+title(ylab="Activity count", col.lab=rgb(0,0,0), line=1.2, cex.lab=1.5)    
 
-xyvals <- sout$simplexopt$x
-polygon(xyvals[,1],xyvals[,2],col=pal2tone[1])
-
-for (n in 1:5){
-  opt <- optimset(MaxIter=5*n)
-  sout <- neldermead::fminsearch(fitline, startvals, opt)
-  xyvals <- sout$simplexopt$x
-  polygon(xyvals[,1],xyvals[,2],col=pal2tone[1])
-}
-
-points(mean(xyvals0[,1]),mean(xyvals0[,2]),pch=24,cex=1.5,bg='white')
-polygon(lmfit$coefficients[2]+pentx[c(1,3,5,2,4,6)],lmfit$coefficients[1]+penty[c(1,3,5,2,4,6)],col='black')
-
-if(outputplot>0){dev.off()}  # this line goes after you've finished plotting (to output the example below, move it to the bottom of the script)
+points(mean(burdur6[,30]),mean(burct6[,30]),pch=15)
+points(mean(burdur9[,30]),mean(burct9[,30]),pch=15,col=pal2tone[1])
+points(mean(burdur6[,31]),mean(burct6[,31]),pch=16)
+points(mean(burdur9[,31]),mean(burct9[,31]),pch=16,col=pal2tone[1])
 
 
+bothdata6 <- matrix(0,nrow=192,ncol=2)
+bothdata9 <- bothdata6
+bothdata6[,1] <- burdur6[,30]
+bothdata6[,2] <- burct6[,30]
+bothdata9[,1] <- burdur9[,30]
+bothdata9[,2] <- burct9[,30]
+output1 <- tsqh.test(bothdata6,bothdata9,paired=FALSE)
 
-figno <- figno + 1
-if(outputplot==1){postscript(paste('figures/Figure ',chapter,'.',figno,'.eps',sep=''), horizontal = FALSE, onefile = FALSE, paper = "special", height = 4.5, width = 6.5)}
-if(outputplot==2){pdf(paste('figures/Figure ',chapter,'.',figno,'.pdf',sep=''), bg="transparent", height = 4.5, width = 6.5)}
+A <- cov(bothdata6)
+ctr    <- colMeans(bothdata6) 
+RR     <- chol(A)                               # Cholesky decomposition
+angles <- seq(0, 2*pi, length.out=200)          # angles for ellipse
+ell    <- 1 * cbind(cos(angles), sin(angles)) %*% RR  # ellipse scaled with factor 1
+ellCtr <- sweep(ell, 2, ctr, "+")               # center ellipse to the data centroid
+eigVal  <- eigen(A)$values
+eigVec  <- eigen(A)$vectors
+eigScl  <- eigVec  %*% diag(sqrt(eigVal))  # scale eigenvectors to length = square-root
+xMat    <- rbind(ctr[1] + eigScl[1, ], ctr[1] - eigScl[1, ])
+yMat    <- rbind(ctr[2] + eigScl[2, ], ctr[2] - eigScl[2, ])
+ellBase <- cbind(sqrt(eigVal[1])*cos(angles), sqrt(eigVal[2])*sin(angles)) 
+ellRot  <- eigVec %*% t(ellBase) 
+lines((ellRot+ctr)[1, ], (ellRot+ctr)[2, ], lwd=2, col='lightgrey')
 
-x <- matrix(rep(seq(-5,5,length.out=200),200),nrow=200,ncol=200)
-y <- t(x)
-z <- (x^2 + y - 11)^2 + (x + y^2 - 7)^2
-
-plotlims <- c(-5,5,-5,5)
-ticklocsxy <- seq(-4,4,2)    # locations of tick marks on x axis
-
-plot(x=NULL,y=NULL,axes=FALSE, ann=FALSE, xlim=plotlims[1:2], ylim=plotlims[3:4])  
-axis(1, at=c(-5,ticklocsxy,5), tck=0.01, lab=F, lwd=2)    
-axis(2, at=c(-5,ticklocsxy,5), tck=0.01, lab=F, lwd=2)
-mtext(text = ticklocsxy, side = 1, at=ticklocsxy)     # add the tick labels
-mtext(text = ticklocsxy, side = 2, at=ticklocsxy, line=0.2, las=1)
-
-image(x[,1],y[1,],z,zlim=c(0,150),col=colmatrix2, add=TRUE, useRaster=TRUE, axes=FALSE, ann=FALSE)
-
-contour(x=x[,1],y=y[1,],z,nlevels=20,add=TRUE)
-minpoint <- which(z==min(z),arr.ind=TRUE)
-
-pentx <- 4*cos(pi/2+(0:5)*2*pi/5)/(8*9/5)
-penty <- 4*sin(pi/2+(0:5)*2*pi/5)/(8)
-polygon(x[minpoint[1],1]+pentx[c(1,3,5,2,4,6)],y[1,minpoint[2]]+penty[c(1,3,5,2,4,6)],col='black')
-
-if(outputplot>0){dev.off()}  # this line goes after you've finished plotting (to output the example below, move it to the bottom of the script)
-
-
-figno <- figno + 1
-if(outputplot==1){postscript(paste('figures/Figure ',chapter,'.',figno,'.eps',sep=''), horizontal = FALSE, onefile = FALSE, paper = "special", height = 4.5, width = 6.5)}
-if(outputplot==2){pdf(paste('figures/Figure ',chapter,'.',figno,'.pdf',sep=''), bg="transparent", height = 4.5, width = 6.5)}
-
-x <<- seq(-10,15,1)
-p <- c(2,3)
-ydata <- exp(-((x-p[1])^2)/(2*p[2]^2))
-ydata <<- ydata + 0.05*rnorm(length(x))
-plot(x,ydata,type='p')
-
-if(outputplot>0){dev.off()}  # this line goes after you've finished plotting (to output the example below, move it to the bottom of the script)
+A <- cov(bothdata9)
+ctr    <- colMeans(bothdata9) 
+RR     <- chol(A)                               # Cholesky decomposition
+angles <- seq(0, 2*pi, length.out=200)          # angles for ellipse
+ell    <- 1 * cbind(cos(angles), sin(angles)) %*% RR  # ellipse scaled with factor 1
+ellCtr <- sweep(ell, 2, ctr, "+")               # center ellipse to the data centroid
+eigVal  <- eigen(A)$values
+eigVec  <- eigen(A)$vectors
+eigScl  <- eigVec  %*% diag(sqrt(eigVal))  # scale eigenvectors to length = square-root
+xMat    <- rbind(ctr[1] + eigScl[1, ], ctr[1] - eigScl[1, ])
+yMat    <- rbind(ctr[2] + eigScl[2, ], ctr[2] - eigScl[2, ])
+ellBase <- cbind(sqrt(eigVal[1])*cos(angles), sqrt(eigVal[2])*sin(angles)) 
+ellRot  <- eigVec %*% t(ellBase) 
+lines((ellRot+ctr)[1, ], (ellRot+ctr)[2, ], lwd=2, col=pal2tone[3])
 
 
-figno <- figno + 1
-if(outputplot==1){postscript(paste('figures/Figure ',chapter,'.',figno,'.eps',sep=''), horizontal = FALSE, onefile = FALSE, paper = "special", height = 4.5, width = 6.5)}
-if(outputplot==2){pdf(paste('figures/Figure ',chapter,'.',figno,'.pdf',sep=''), bg="transparent", height = 4.5, width = 6.5)}
-
-p <- c(5,1)
-pred <- exp(-((x-p[1])^2)/(2*p[2]^2))
-plot(x,ydata,type='p')
-lines(x,pred,lwd=2,col=pal2tone[1])
-
-if(outputplot>0){dev.off()}  # this line goes after you've finished plotting (to output the example below, move it to the bottom of the script)
+bothdata6 <- matrix(0,nrow=192,ncol=2)
+bothdata9 <- bothdata6
+bothdata6[,1] <- burdur6[,31]
+bothdata6[,2] <- burct6[,31]
+bothdata9[,1] <- burdur9[,31]
+bothdata9[,2] <- burct9[,31]
+output2 <- tsqh.test(bothdata6,bothdata9,paired=FALSE)
 
 
-figno <- figno + 1
-if(outputplot==1){postscript(paste('figures/Figure ',chapter,'.',figno,'.eps',sep=''), horizontal = FALSE, onefile = FALSE, paper = "special", height = 4.5, width = 6.5)}
-if(outputplot==2){pdf(paste('figures/Figure ',chapter,'.',figno,'.pdf',sep=''), bg="transparent", height = 4.5, width = 6.5)}
+A <- cov(bothdata6)
+ctr    <- colMeans(bothdata6) 
+RR     <- chol(A)                               # Cholesky decomposition
+angles <- seq(0, 2*pi, length.out=200)          # angles for ellipse
+ell    <- 1 * cbind(cos(angles), sin(angles)) %*% RR  # ellipse scaled with factor 1
+ellCtr <- sweep(ell, 2, ctr, "+")               # center ellipse to the data centroid
+eigVal  <- eigen(A)$values
+eigVec  <- eigen(A)$vectors
+eigScl  <- eigVec  %*% diag(sqrt(eigVal))  # scale eigenvectors to length = square-root
+xMat    <- rbind(ctr[1] + eigScl[1, ], ctr[1] - eigScl[1, ])
+yMat    <- rbind(ctr[2] + eigScl[2, ], ctr[2] - eigScl[2, ])
+ellBase <- cbind(sqrt(eigVal[1])*cos(angles), sqrt(eigVal[2])*sin(angles)) 
+ellRot  <- eigVec %*% t(ellBase) 
+lines((ellRot+ctr)[1, ], (ellRot+ctr)[2, ], lwd=2, col='lightgrey')
 
-errorfit <- function(p){
-  gaus <- exp(-((x-p[1])^2)/(2*p[2]^2))
-  rms <- sqrt(sum((gaus-ydata)^2)/length(ydata))
-  return(rms)}
+A <- cov(bothdata9)
+ctr    <- colMeans(bothdata9) 
+RR     <- chol(A)                               # Cholesky decomposition
+angles <- seq(0, 2*pi, length.out=200)          # angles for ellipse
+ell    <- 1 * cbind(cos(angles), sin(angles)) %*% RR  # ellipse scaled with factor 1
+ellCtr <- sweep(ell, 2, ctr, "+")               # center ellipse to the data centroid
+eigVal  <- eigen(A)$values
+eigVec  <- eigen(A)$vectors
+eigScl  <- eigVec  %*% diag(sqrt(eigVal))  # scale eigenvectors to length = square-root
+xMat    <- rbind(ctr[1] + eigScl[1, ], ctr[1] - eigScl[1, ])
+yMat    <- rbind(ctr[2] + eigScl[2, ], ctr[2] - eigScl[2, ])
+ellBase <- cbind(sqrt(eigVal[1])*cos(angles), sqrt(eigVal[2])*sin(angles)) 
+ellRot  <- eigVec %*% t(ellBase) 
+lines((ellRot+ctr)[1, ], (ellRot+ctr)[2, ], lwd=2, col=pal2tone[3])
 
-sout <- neldermead::fminsearch(errorfit, c(1,1))  # fit the model to the data
-p <- sout$optbase$xopt    # extract the parameter estimates
-
-# get the model predictions for these parameters
-pred <- exp(-((x-p[1])^2)/(2*p[2]^2))
-
-plot(x,ydata,type='p')
-lines(x,pred,lwd=2,col=pal2tone[1])  # plot the model fit as a line
+legend(0.045,0.2,c('Dark','Light'), pch=15:16, box.lwd=2)
 
 if(outputplot>0){dev.off()}  # this line goes after you've finished plotting (to output the example below, move it to the bottom of the script)
+
+
