@@ -1,4 +1,9 @@
-
+# set outputplot as 2 to save plots as PDfs
+outputplot <- 2
+# set n of simulations for figure 5
+nsims <- 100  # global value for the whole script - increase to 100000 for final run
+# set colours for all plots
+pal2tone <- c('#8783CF','#10069F','#CFCDEC')  # blue 072
 
 #  create some functions that are used later to identify outliers
 d_chauv <- function(data){

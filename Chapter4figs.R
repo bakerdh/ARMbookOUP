@@ -1,4 +1,5 @@
-
+# set outputplot to 2 for saving as PDF (change to 1 if you want EPS)
+outputplot <- 2
 # Chapter 4 figures ---------------------------------------------------------------
 chapter <- 4
 figno <- 1
