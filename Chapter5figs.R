@@ -1,3 +1,15 @@
+# install and load pwr library for power analysis
+install.packages('pwr')
+library(pwr)
+
+# set outputplot to 2 for saving as PDF (change to 1 if you want EPS)
+outputplot <- 2
+# set colours for all plots
+pal2tone <- c('#8783CF','#10069F','#CFCDEC')  # blue 072
+
+# helper functions that produce alpha transparency
+addalpha <- function(col, alpha=1){apply(sapply(col, col2rgb)/255, 2, function(x) rgb(x[1], x[2], x[3], alpha=alpha))}
+flatalpha <- function(col, alpha=1){apply(sapply(col, col2rgb)/255, 2, function(x) rgb(x[1]*alpha + 1-alpha, x[2]*alpha + 1-alpha, x[3]*alpha + 1-alpha))}
 
 # Chapter 5 figures ---------------------------------------------------------------
 chapter <- 5
