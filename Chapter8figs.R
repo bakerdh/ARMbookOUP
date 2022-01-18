@@ -1,3 +1,9 @@
+outputplot <- 2  # 0 draws to the Plots window, 1 exports as eps, 2 exports as pdf
+nsims <- 100  # global value for any stochastic simulations - increase to 100000 for final run
+
+# palette of colours used in the figures, based on Pantone blue 072
+pal2tone <- c('#8783CF','#10069F','#CFCDEC')  # blue 072
+
 
 # Chapter 8 figures ---------------------------------------------------------------
 

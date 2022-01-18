@@ -1,3 +1,14 @@
+# install the FourierStats package from github using the devtools package
+packagelist <- c('FourierStats')
+missingpackages <- packagelist[!packagelist %in% installed.packages()[,1]]
+if (length(missingpackages)>0){devtools::install_github("bakerdh/FourierStats")}
+toinstall <- packagelist[which(!packagelist %in% (.packages()))]
+invisible(lapply(toinstall,library,character.only=TRUE))
+
+outputplot <- 2  # 0 draws to the Plots window, 1 exports as eps, 2 exports as pdf
+
+# palette of colours used in the figures, based on Pantone blue 072
+pal2tone <- c('#8783CF','#10069F','#CFCDEC')  # blue 072
 
 # Chapter 11 figures ---------------------------------------------------------------
 
@@ -214,7 +225,7 @@ if(outputplot>0){dev.off()}  # this line goes after you've finished plotting (to
 
 figno <- figno + 1
 if(outputplot==1){postscript(paste('figures/Figure ',chapter,'.',figno,'.eps',sep=''), horizontal = FALSE, onefile = FALSE, paper = "special", height = 5, width = 5)}
-if(outputplot==2){pdf(paste('figures/Figure ',chapter,'.',figno,'.pdf',sep=''), bg="transparent", height = 5, width = 5)}
+if(outputplot==2){pdf(paste('figures/Figure ',chapter,'.',figno,'.pdf',sep=''), bg="transparent", height = 5, width = 8)}
 
 load('data/zebrafish.RData')
 par(mfrow=c(1,2), las=1)

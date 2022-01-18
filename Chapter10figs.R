@@ -1,3 +1,15 @@
+# compact code to install and activate all the packages required to generate the figures
+packagelist <- c('pracma', 'jpeg', 'png', 'signal')
+missingpackages <- packagelist[!packagelist %in% installed.packages()[,1]]
+if (length(missingpackages)>0){install.packages(missingpackages)}
+toinstall <- packagelist[which(!packagelist %in% (.packages()))]
+invisible(lapply(toinstall,library,character.only=TRUE))
+
+outputplot <- 2  # 0 draws to the Plots window, 1 exports as eps, 2 exports as pdf
+
+# palette of colours used in the figures, based on Pantone blue 072
+pal2tone <- c('#8783CF','#10069F','#CFCDEC')  # blue 072
+
 
 rotate <- function(x){t(apply(x,2,rev))}
 fftshift <- function(im) {im * (-1)^(row(im) + col(im))}  
@@ -599,3 +611,4 @@ rasterImage(bughouse,2.5,-1,4.5,1)
 points(3.75,0.25,pch=1,col=pal2tone[2],cex=8,lwd=8)
 
 if(outputplot>0){dev.off()}  # this line goes after you've finished plotting (to output the example below, move it to the bottom of the script)
+
