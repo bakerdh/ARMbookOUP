@@ -1,3 +1,14 @@
+# install and load relevant packages
+packagelist <- c('lme4','lmerTest')
+missingpackages <- packagelist[!packagelist %in% installed.packages()[,1]]
+if (length(missingpackages)>0){install.packages(missingpackages)}
+toinstall <- packagelist[which(!packagelist %in% (.packages()))]
+invisible(lapply(toinstall,library,character.only=TRUE))
+
+# set outputplot to 2 for saving as PDF (change to 1 if you want EPS)
+outputplot <- 2
+# set colours for all plots
+pal2tone <- c('#8783CF','#10069F','#CFCDEC')  # blue 072
 
 # Chapter 7 figures ---------------------------------------------------------------
 
