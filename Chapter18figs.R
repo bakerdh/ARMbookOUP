@@ -7,10 +7,10 @@
 
 # check for any missing settings and install required packages and functions
 if (!exists('outputplot')){outputplot <- 2}
-if (!exists('nsims')){nsims <- 100000}
+if (!exists('nsims')){nsims <- 100} # increase to 100000 for final run
 if (!exists('pal2tone')){pal2tone <- c('#8783CF','#10069F','#CFCDEC')}  # blue 072
 
-packagelist <- c('pwr','rmeta','MAd','compute.es','lme4','lmerTest','MuMIn','knitr','Hotelling','tictoc','MASS','jpeg','amap','optimbase','optimsimplex','neldermead','signal','pracma','lavaan','semPlot','caret','kernlab','e1071','graphics','RSNNS','psyphy','quickpsy','BayesFactor','pals','colorspace','grImport','PRISMAstatement','rsvg','DiagrammeRsvg','png','data.table','devtools','corrplot','DiagrammeR')
+packagelist <- c('pwr','rmeta','MAd','compute.es','lme4','lmerTest','MuMIn','knitr','Hotelling','tictoc','MASS','jpeg','amap','signal','pracma','lavaan','semPlot','caret','kernlab','e1071','graphics','RSNNS','psyphy','quickpsy','BayesFactor','pals','colorspace','grImport','PRISMAstatement','rsvg','DiagrammeRsvg','png','data.table','devtools','corrplot','DiagrammeR')
 missingpackages <- packagelist[!packagelist %in% installed.packages()[,1]]
 if (length(missingpackages)>0){install.packages(missingpackages)}
 toinstall <- packagelist[which(!packagelist %in% (.packages()))]
@@ -648,6 +648,9 @@ points(datax,datay,col=rgb(0,0,0),pch=16,cex=0.6)
 dev.off()
 
 # import the figure
+#the commented-out line below is a workaround if the following lines of code won't run
+#simply replace the filepath with where your Ghostscript exe file is stored
+#Sys.setenv(R_GSCMD = normalizePath("C:\\Program Files\\gs\\gs9.55.0\\bin\\gswin64c.exe"))
 PostScriptTrace('outputfile.ps')
 e1 <- readPicture('outputfile.ps.xml')
 
